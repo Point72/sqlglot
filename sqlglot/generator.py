@@ -5041,9 +5041,6 @@ class Generator(metaclass=_Generator):
         return f"JSON{this}{with_sql}{unique_sql}"
 
     def jsonvalue_sql(self, expression: exp.JSONValue) -> str:
-        def _generate_on_options(arg: t.Any) -> str:
-            return arg if isinstance(arg, str) else f"DEFAULT {self.sql(arg)}"
-
         path = self.sql(expression, "path")
         returning = self.sql(expression, "returning")
         returning = f" RETURNING {returning}" if returning else ""

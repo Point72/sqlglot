@@ -8635,8 +8635,6 @@ class ExecuteSql(Execute):
 ALL_FUNCTIONS = subclasses(__name__, Func, {AggFunc, Anonymous, Func})
 FUNCTION_BY_NAME = {name: func for func in ALL_FUNCTIONS for name in func.sql_names()}
 
-JSON_PATH_PARTS = subclasses(__name__, JSONPathPart, {JSONPathPart})
-
 PERCENTILES = (PercentileCont, PercentileDisc)
 
 
