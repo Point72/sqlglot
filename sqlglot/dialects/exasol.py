@@ -485,6 +485,10 @@ class Exasol(Dialect):
             ),
             # https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/mod.htm
             exp.Mod: rename_func("MOD"),
+            # https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/rank.htm
+            exp.Rank: unsupported_args("expressions")(lambda *_: "RANK()"),
+            # https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/dense_rank.htm
+            exp.DenseRank: unsupported_args("expressions")(lambda *_: "DENSE_RANK()"),
             # https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/regexp_substr.htm
             exp.RegexpExtract: unsupported_args("parameters", "group")(
                 rename_func("REGEXP_SUBSTR")
@@ -1029,16 +1033,3 @@ class Exasol(Dialect):
 
         def collate_sql(self, expression: exp.Collate) -> str:
             return self.sql(expression.this)
-
-        def _no_arg_window_func(self, expression: exp.Expression, name: str) -> str:
-            if expression.args.get("expressions"):
-                self.unsupported(f"Exasol does not support arguments in {name}")
-            return self.func(name)
-
-        # https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/rank.htm
-        def rank_sql(self, expression: exp.Rank) -> str:
-            return self._no_arg_window_func(expression, "RANK")
-
-        # https://docs.exasol.com/db/latest/sql_references/functions/alphabeticallistfunctions/dense_rank.htm
-        def denserank_sql(self, expression: exp.DenseRank) -> str:
-            return self._no_arg_window_func(expression, "DENSE_RANK")
