@@ -251,6 +251,14 @@ class ClickHouseParser(parser.Parser):
             for k, v in parser.Parser.FUNCTIONS.items()
             if k not in ("TRANSFORM", "APPROX_TOP_SUM")
         },
+        **{
+            regexp_extract: lambda args: exp.RegexpExtract(
+                this=seq_get(args, 0),
+                expression=seq_get(args, 1),
+                group=seq_get(args, 2),
+            )
+            for regexp_extract in ("REGEXPEXTRACT", "REGEXP_EXTRACT", "REGEXP_SUBSTR")
+        },
         **{f"TOSTARTOF{unit}": _build_timestamp_trunc(unit=unit) for unit in TIMESTAMP_TRUNC_UNITS},
         "ANY": exp.AnyValue.from_arg_list,
         "ARRAYCOMPACT": exp.ArrayCompact.from_arg_list,
