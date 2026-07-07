@@ -145,6 +145,9 @@ class TestBigQuery(Validator):
         column = self.validate_identity("SELECT `db.t`.`c` FROM `db.t`").selects[0]
         self.assertEqual(len(column.parts), 3)
 
+        column = self.validate_identity("SELECT `p.d.t`.`c`.`f` FROM `p.d.t`").selects[0]
+        column.this.assert_is(exp.Dot)
+
         select_with_quoted_udf = self.validate_identity("SELECT `p.d.UdF`(data) FROM `p.d.t`")
         self.assertEqual(select_with_quoted_udf.selects[0].name, "p.d.UdF")
 
